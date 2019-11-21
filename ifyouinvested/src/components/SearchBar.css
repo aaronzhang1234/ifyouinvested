@@ -1,0 +1,11 @@
+#stock_ticker{
+  text-align:center;
+  background-color:rgba(0, 0, 0, 0);
+  color:white;
+  border: none;
+  outline:none;
+  transition:height 1s;
+  -webkit-transition:height 1s;
+  height:100px;
+  font-size:100px;
+}

@@ -1,22 +1,26 @@
 import React,{Component} from 'react';
 import Results from './components/Results.js'
+import SearchBar from './components/SearchBar.js'
+import MoneyBar from './components/MoneyBar.js'
 import axios from 'axios';
+import loading from './puff.svg'
 import './App.css';
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      show_button:true,
+      show_input:true,
       ticker:"",
       amt:"",
       current_price:"",
-      ipo_price:""
+      ipo_price:"",
+      money_length:0
     }
   }
   getStock = () =>{   
     this.setState({
-      show_button:false
+      show_input:false
     });
 
     let av_url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+this.state.ticker+"&interval=60min&outputsize=compact&apikey=L2JPMX2ZDKA2DFUY" 
@@ -54,23 +58,25 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <div 
-           className ={this.state.show_button ? "input_div" : "hidden"} 
+           className ={this.state.show_input ? "input_div" : "hidden"} 
           >
-            <input 
-              value ={this.state.ticker} onChange={evt=>this.updateTicker(evt)}
-              id="stock_ticker" 
-              type="text"
+            <h1>HOW MUCH IS A</h1>
+              <MoneyBar sendAmt={this.getAmt}/>
+            <h1> INVESTMENT IN </h1>
+              <SearchBar sendTicker={this.getTicker}/>            
+            <h1> BOUGHT AT  </h1>
+            <input
+              type="datetime-local"
             />
-            <br/>
-            <input 
-              value ={this.state.amt} onChange={evt=>this.updateAmt(evt)}
-              id="amt_money"  
-              type="text"
-            />
-            <br/>
+            <h1> WORTH NOW? </h1>
             <button onClick={this.getStock}>
               Press Button for Stock
             </button>
+          </div>
+          <div
+            className={!((this.state.ipo_price)&&(this.state.current_price))&&(!this.state.show_input) ? "":"hidden"}
+          >
+            <img src={loading}></img>
           </div>
           <div
             className={this.state.ipo_price&&this.state.current_price?"":"hidden"}
@@ -85,15 +91,15 @@ class App extends Component {
       </div>
     )
   }
-  updateAmt = (evt) =>{
+  getAmt=(amt)=>{
     this.setState({
-      amt:evt.target.value
-    });
+      amt:amt
+    })
   }
-  updateTicker = (evt) =>{
+  getTicker=(ticker)=>{
     this.setState({
-      ticker:evt.target.value
-    });
+      ticker:ticker
+    })
   }
 }
 

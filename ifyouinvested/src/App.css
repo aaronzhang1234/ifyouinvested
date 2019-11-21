@@ -23,11 +23,10 @@
 .input_div{
   display:block;
   position:relative;
+  overflow: hidden; 
+  text-align: center;
 
 }
 .hidden{
-  visibility: hidden;
-}
-#stock_ticker{
-  size:30;
+  display: none;
 }

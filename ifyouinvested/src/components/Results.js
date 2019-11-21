@@ -9,7 +9,7 @@ class Results extends Component{
     }
     findTotal =()=>{
         let amt_shares = this.props.amt/this.props.ipo_price;
-        let total_money = amt_shares * this.props.current_price; 
+        let total_money = Math.floor(amt_shares * this.props.current_price); 
         return <h1>{total_money}</h1>
     }
     render(){

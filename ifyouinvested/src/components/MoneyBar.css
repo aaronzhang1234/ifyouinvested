@@ -1,0 +1,25 @@
+#amt_money{
+  display:inline-block;
+  text-align:center;
+  background-color:rgba(0, 0, 0, 0);
+  color:white;
+  border: none;
+  outline:none;
+  transition:height 1s;
+  -webkit-transition:height 1s;
+  height:100px;
+  font-size:70px;
+}
+#money_div{
+  display: inline;
+  vertical-align: top;
+  display: inline-block;
+  margin: 10px 10px 0 0;
+  padding: 5px 10px
+
+}
+#money_sign{
+  display:inline-block;
+  font-size:100px;
+  margin:0;
+}
