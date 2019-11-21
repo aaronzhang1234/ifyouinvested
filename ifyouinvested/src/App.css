@@ -20,3 +20,14 @@
 .App-link {
   color: #09d3ac;
 }
+.input_div{
+  display:block;
+  position:relative;
+
+}
+.hidden{
+  visibility: hidden;
+}
+#stock_ticker{
+  size:30;
+}
