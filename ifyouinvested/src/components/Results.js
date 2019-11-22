@@ -1,4 +1,5 @@
 import React,{Component} from 'react';
+import accounting from 'accounting'
 
 class Results extends Component{
     constructor(props){
@@ -10,7 +11,8 @@ class Results extends Component{
     findTotal =()=>{
         let amt_shares = this.props.amt/this.props.ipo_price;
         let total_money = Math.floor(amt_shares * this.props.current_price); 
-        return <h1>{total_money}</h1>
+        let total_money_formatted = accounting.formatMoney(total_money)
+        return <h1>{total_money_formatted}</h1>
     }
     render(){
         return(

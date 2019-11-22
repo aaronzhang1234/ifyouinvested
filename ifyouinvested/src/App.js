@@ -15,16 +15,18 @@ class App extends Component {
       amt:"",
       current_price:"",
       ipo_price:"",
-      money_length:0
     }
   }
-  getStock = () =>{   
+  getStock = () =>{ 
     this.setState({
       show_input:false
     });
 
-    let av_url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+this.state.ticker+"&interval=60min&outputsize=compact&apikey=L2JPMX2ZDKA2DFUY" 
-    let quandl_url = "https://www.quandl.com/api/v3/datasets/WIKI/"+this.state.ticker+"/data.json?api_key=dmJpQuks3_qwKAmRBVJP";
+    let av_key = "L2JPMX2ZDKA2DFUY";
+    let quandl_key = "dmJpQuks3_qwKAmRBVJP";
+
+    let av_url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+this.state.ticker+"&interval=60min&outputsize=compact&apikey="+av_key;
+    let quandl_url = "https://www.quandl.com/api/v3/datasets/WIKI/"+this.state.ticker+"/data.json?api_key="+quandl_key;
 
     axios.get(av_url)
     .then(av_response=>{
@@ -65,9 +67,6 @@ class App extends Component {
             <h1> INVESTMENT IN </h1>
               <SearchBar sendTicker={this.getTicker}/>            
             <h1> BOUGHT AT  </h1>
-            <input
-              type="datetime-local"
-            />
             <h1> WORTH NOW? </h1>
             <button onClick={this.getStock}>
               Press Button for Stock
