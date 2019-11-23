@@ -33,7 +33,7 @@ class App extends Component {
       let av_data = av_response.data["Time Series (Daily)"];
       console.log(av_data);
       let current_data = av_data[Object.keys(av_data)[0]];
-      let current_price = current_data["2. high"];
+      let current_price = current_data["4. close"];
       this.setState({
         current_price:current_price
       });    
@@ -48,7 +48,10 @@ class App extends Component {
 
     })
     .catch(error=>{
-      console.log(error);
+      this.setState({
+        current_price:-1,
+        a_ipo_price:-1
+      });
     })
 
     axios.get(quandl_url)
@@ -73,8 +76,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <div 
-           className ={this.state.show_input ? "input_div" : "hidden"} 
-          >
+           className ={this.state.show_input ? "input_div" : "hidden"}>
             <h1>HOW MUCH IS A</h1>
               <MoneyBar sendAmt={this.getAmt}/>
             <h1> INVESTMENT IN </h1>
@@ -85,14 +87,19 @@ class App extends Component {
               Press Button for Stock
             </button>
           </div>
+
           <div
-            className={!(this.state.a_ipo_price && this.state.current_price && this.state.q_ipo_price)&&(!this.state.show_input) ? "":"hidden"}
-          >
+            className={!(this.state.a_ipo_price && this.state.current_price && this.state.q_ipo_price)&&(!this.state.show_input) ? "":"hidden"}>
             <img src={loading}></img>
           </div>
+
           <div
-            className={this.state.a_ipo_price && this.state.q_ipo_price &&this.state.current_price ?"":"hidden"}
-          >       
+            className={this.state.current_price>=0?"hidden":""}> 
+            <h1>Error getting Stock Data</h1>
+          </div>
+
+          <div
+            className={this.state.a_ipo_price && this.state.q_ipo_price &&this.state.current_price>0 ?"":"hidden"}>       
             <Results
               ticker={this.state.ticker}
               amt={this.state.amt}

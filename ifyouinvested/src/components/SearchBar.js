@@ -25,7 +25,6 @@ class SearchBar extends Component{
                 let name = current_search["2. name"];
                 search_results.push({value:ticker, label:name+"("+ticker+")"});
             }
-            console.log(search_results);
             return search_results;
         }    
     };
@@ -42,7 +41,6 @@ class SearchBar extends Component{
         )
     }
     getResults=(evt)=>{
-        console.log(evt);
         this.props.sendTicker(evt.value);
     }
     updateResults = evt =>
