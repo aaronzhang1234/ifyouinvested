@@ -2,8 +2,8 @@ import React,{Component} from 'react';
 import Results from './components/Results.js'
 import SearchBar from './components/SearchBar.js'
 import MoneyBar from './components/MoneyBar.js'
+import TimeBar from './components/TimeBar.js'
 import axios from 'axios';
-import loading from './puff.svg'
 import './App.css';
 
 class App extends Component {
@@ -53,11 +53,14 @@ class App extends Component {
       return;
     });
 
-    let quandl_data = quandl_response.data["dataset_data"]["data"];
-    for(let p = 0; p<quandl_data.length-1; p++){
-      let quandl_info = quandl_data[p];
-      stock_data[quandl_info[0]] = quandl_info[11]; 
+    if(quandl_response){
+      let quandl_data = quandl_response.data["dataset_data"]["data"];
+      for(let p = 0; p<quandl_data.length-1; p++){
+        let quandl_info = quandl_data[p];
+        stock_data[quandl_info[0]] = quandl_info[11]; 
+      }
     }
+
     this.setState({
       stock_data:stock_data
     })
@@ -73,6 +76,7 @@ class App extends Component {
             <h1> INVESTMENT IN </h1>
               <SearchBar sendTicker={this.getTicker}/>            
             <h1> BOUGHT AT  </h1>
+              <TimeBar/>
             <h1> WORTH NOW? </h1>
             <button onClick={this.getStock}>
               Press Button for Stock
