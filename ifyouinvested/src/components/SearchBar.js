@@ -26,7 +26,9 @@ class SearchBar extends Component{
                     let name = current_search["2. name"];
                     this.state.search_results.push({value:ticker, label:name+"("+ticker+")"});
                 }
-                console.log(this.state.search_results);
+            })
+            .catch(err=>{
+                console.log(err);
             });
         }
     }
@@ -38,16 +40,18 @@ class SearchBar extends Component{
                     placeholder="Select your stock"
                     onChange={evt=>this.getResults(evt)}
                     onInputChange={evt=>this.updateResults(evt)}
-                />                
+                />  
             </div>
         )
     }
     getResults=(evt)=>{
         console.log(evt);
+        this.props.sendTicker(evt.value);
     }
     updateResults = (evt) =>{
+        console.log(evt);
         clearTimeout(searchTimer);
-        searchTimer = setTimeout(this.searchFor, 5000);
+        searchTimer = setTimeout(this.searchFor, 2000);
         this.setState({
             ticker:evt
         });
