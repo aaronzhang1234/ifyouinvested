@@ -4,7 +4,8 @@ class MoneyBar extends Component{
     constructor(props){
         super(props);
         this.state = {
-            money_length:0
+            amt:1000,
+            money_length:4
         }
     }
     render(){
@@ -14,7 +15,7 @@ class MoneyBar extends Component{
               <input 
                 value ={this.state.amt} onChange={evt=>this.updateAmt(evt)}
                 id="amt_money"  
-                maxLength="20"
+                maxLength="15"
                 size={this.state.money_length +1}
                 type="text"
                 autoFocus="autofocus"
@@ -26,7 +27,8 @@ class MoneyBar extends Component{
         let amount = evt.target.value;
 
         this.setState({
-            money_length:amount.length
+            money_length:amount.length,
+            amt:amount
         });
         this.props.sendAmt(amount);
     }

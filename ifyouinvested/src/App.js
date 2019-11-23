@@ -12,7 +12,7 @@ class App extends Component {
     this.state = {
       show_input:true,
       ticker:"",
-      amt:"",
+      amt:1000,
       current_price:"",
       q_ipo_price:"",
       a_ipo_price:"",
