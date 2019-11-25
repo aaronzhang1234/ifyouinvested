@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import accounting from 'accounting';
-import '../App.css';
+import './Results.css';
 import TimeBar from './TimeBar.js';
 import loading from '../puff.svg'
 
@@ -9,6 +9,15 @@ class Results extends Component{
         super(props);
         this.state = {
             total_amount:-1,
+            first_date: null,
+            last_date: null,
+            from_date:new Date(),
+            to_date:new Date()            
+        }
+    }
+    componentDidUpdate=()=>{
+        if(this.state.first_date==null){
+            this.stock_range();
         }
     }
     findTotal =()=>{
@@ -107,9 +116,15 @@ class Results extends Component{
         )
 
     }
-    render(){
+    render(){        
         return(
             <React.Fragment>                
+                <TimeBar
+                    first_date={this.state.first_date}
+                    last_date={this.state.last_date}
+                    sendFrom = {this.getFrom}
+                    sendTo = {this.getTo}
+                />                
                 <div className={Object.keys(this.props.stock_data).length>0?"":"hidden"}>                
                     <this.findTotal/>            
                     <this.findHighest/>
@@ -127,6 +142,35 @@ class Results extends Component{
                 </h1>
             </React.Fragment>
         )
+    }
+    stock_range=()=>{
+        let stock_data = this.props.stock_data;
+        let dates = Object.keys(stock_data);
+        if(dates.length>0){
+            let first_date = this.convert_to_date(dates[dates.length-1]);
+            let last_date = this.convert_to_date(dates[0]);
+            this.setState({
+                first_date:first_date,
+                last_date:last_date
+            })
+            return;
+        }
+    } 
+    convert_to_date=(date)=>{
+        let date_array = date.split("-");
+        console.log(date_array)
+        let month = Number(date_array[1])-1
+        return(new Date(date_array[0], month, date_array[2]));
+    }
+    getFrom=(from_date)=>{
+        this.setState({
+            from_date:from_date
+        })
+    }
+    getTo=(to_date)=>{
+        this.setState({
+            to_date:to_date
+        })
     }
 }
 export default Results
