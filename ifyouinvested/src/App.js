@@ -2,7 +2,6 @@ import React,{Component} from 'react';
 import Results from './components/Results.js'
 import SearchBar from './components/SearchBar.js'
 import MoneyBar from './components/MoneyBar.js'
-import TimeBar from './components/TimeBar.js'
 import axios from 'axios';
 import './App.css';
 
@@ -36,21 +35,23 @@ class App extends Component {
       this.setState({
         av_error:true
       });
-      return;
     })
 
-    let av_data = av_response.data["Time Series (Daily)"];
-    let av_keys = Object.keys(av_data);
-    for(let i = 0; i< av_keys.length; i++){
-      let day_data = av_data[av_keys[i]]; 
-      stock_data[av_keys[i]] = Number(day_data["5. adjusted close"]);
+    if(av_response){
+      let av_data = av_response.data["Time Series (Daily)"];
+      let av_keys = Object.keys(av_data);
+      console.log(av_keys[av_keys.length-1]);
+      for(let i = 0; i< av_keys.length; i++){
+        let day_data = av_data[av_keys[i]]; 
+        stock_data[av_keys[i]] = Number(day_data["5. adjusted close"]);
+      }
     }
 
-    let quandl_response = await axios.get(quandl_url).catch(()=>{
+    let quandl_response = await axios.get(quandl_url).catch((err)=>{
+      console.log(err);
       this.setState({
         quandl_error:true
       });
-      return;
     });
 
     if(quandl_response){
@@ -75,8 +76,6 @@ class App extends Component {
               <MoneyBar sendAmt={this.getAmt}/>
             <h1> INVESTMENT IN </h1>
               <SearchBar sendTicker={this.getTicker}/>            
-            <h1> BOUGHT AT  </h1>
-              <TimeBar/>
             <h1> WORTH NOW? </h1>
             <button onClick={this.getStock}>
               Press Button for Stock
@@ -88,7 +87,9 @@ class App extends Component {
             <Results
               ticker={this.state.ticker}
               amt={this.state.amt}
-              stock_data={this.state.stock_data}/>
+              stock_data={this.state.stock_data}
+              av_error={this.state.av_error}
+              quandl_error={this.state.quandl_error}/>
           </div>
         </header>
       </div>
