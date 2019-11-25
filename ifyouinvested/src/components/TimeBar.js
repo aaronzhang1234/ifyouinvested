@@ -9,6 +9,10 @@ class TimeBar extends Component{
             to_date:null
         }
     }
+    isWeekday = date => {
+        const day = date.getDay();
+        return day !== 0 && day !== 6;
+    };
     render(){
         return(
             <div>
@@ -18,6 +22,7 @@ class TimeBar extends Component{
                     onChange={this.handleFromChange}
                     minDate={this.props.first_date}
                     maxDate={this.state.to_date==null?this.props.last_date:this.state.to_date}
+                    filterDate={this.isWeekday}
                 />
                 <h1>To</h1>
                 <DatePicker
@@ -25,6 +30,7 @@ class TimeBar extends Component{
                     onChange={this.handleToChange}
                     minDate={this.state.from_date==null?this.props.first_date:this.state.from_date}
                     maxDate={this.props.last_date}
+                    filterDate={this.isWeekday}
                 />
             </div>
         )
@@ -36,6 +42,7 @@ class TimeBar extends Component{
         })
     }
     handleToChange=(date)=>{
+        console.log("date");
         this.props.sendTo(date);
         this.setState({
             to_date:date
