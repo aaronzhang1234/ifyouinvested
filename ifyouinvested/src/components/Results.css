@@ -4,3 +4,20 @@
 .date_boxes{
     display:inline-block;
 }
+#results-div{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:center
+}
+
+#from-results-div{
+    margin-right:20px;
+    width:50%;
+    flex-direction:row;
+}
+#to-results-div{
+    margin-left:20px;
+    width:50%;
+    flex-direction:row;
+}

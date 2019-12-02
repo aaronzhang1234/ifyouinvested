@@ -6,10 +6,12 @@
 }
 
 #from-bar-div{
+    margin-right:20px;
     width:50%;
     flex-direction:row;
 }
 #to-bar-div{
+    margin-left:20px;
     width:50%;
     flex-direction:row;
 }

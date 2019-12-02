@@ -20,14 +20,12 @@ class TimeBar extends Component{
         const from_options =[
             {value:this.props.important_dates["IPO"] ,label:"IPO"},
             {value:this.props.important_dates["HIGHEST"] ,label:"Highest"},
-            {value:this.props.important_dates["LOWEST"] ,label:"Lowest"},
-            //{value:this.props.important_dates["IPO"] ,label:"Custom"}
+            {value:this.props.important_dates["LOWEST"] ,label:"Lowest"}
         ]
         const to_options=[
             {value:this.props.important_dates["CURRENT"] ,label:"Current"},
             {value:this.props.important_dates["NEXT_HIGHEST"] ,label:"Next Highest"},
-            {value:this.props.important_dates["NEXT_LOWEST"] ,label:"Next Lowest"},
-            //{value:this.props.important_dates["CURRENT"] ,label:"Custom"}
+            {value:this.props.important_dates["NEXT_LOWEST"] ,label:"Next Lowest"}
         ]
         return(
             <div id="time-bar-div">

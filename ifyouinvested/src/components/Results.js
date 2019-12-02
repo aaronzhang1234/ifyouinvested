@@ -3,6 +3,7 @@ import accounting from 'accounting';
 import './Results.css';
 import TimeBar from './TimeBar.js';
 import loading from '../puff.svg'
+import { isThisHour } from 'date-fns';
 
 class Results extends Component{
     constructor(props){
@@ -23,7 +24,6 @@ class Results extends Component{
         let important_dates= {};
         let stock_data = this.props.stock_data;
         let dates = Object.keys(stock_data);
-        console.log(`There is no god ${this.state.from_date}`);
         important_dates["IPO"] = this.convert_string_to_date(dates[dates.length-1]);
         important_dates["CURRENT"] = this.convert_string_to_date(dates[0]);
         
@@ -34,7 +34,6 @@ class Results extends Component{
         important_dates["NEXT_HIGHEST"] = this.convert_string_to_date(this.getExtremes(1, from_date));   
         important_dates["NEXT_LOWEST"] = this.convert_string_to_date(this.getExtremes(0, from_date));
 
-        console.log(important_dates);
         this.setState({
             important_dates:important_dates
         })
@@ -44,7 +43,6 @@ class Results extends Component{
         let dates = Object.keys(stock_data);
         if(after_date){
             let after_index = this.findDateIndex(after_date);
-            console.log(after_index);
             dates = dates.slice(0, after_index);
         }
         let extreme_stock_price = type>0?Math.max.apply(null, dates.map(function(x){return stock_data[x]})):
@@ -53,39 +51,91 @@ class Results extends Component{
         let extreme_match = dates.filter(function(y){return stock_data[y] === extreme_stock_price});    
         return extreme_match[0];
     }
+    findDate = (date)=>{
+        if(date["date"]!=null){
+            let index = this.findDateIndex(date["date"]);
+
+            let stock_data = this.props.stock_data;
+            let dates = Object.keys(stock_data);
+
+            let date_info = dates[index];
+           
+            let price = stock_data[date_info];
+
+            return(
+                <div>
+                    <h1>On {date_info}</h1>
+                    <h1>the price was</h1>
+                    <h1>{price}</h1>                
+                </div>
+            )
+        }
+        return(
+            <img 
+                src={loading}
+                alt="loading"
+            />
+        )
+    }
     findTotal =()=>{
         let stock_data = this.props.stock_data;
         let dates = Object.keys(stock_data);
 
-        let cur_price = stock_data[dates[0]];
-
-        let first_date = dates[dates.length-1];
-        let first_price = stock_data[dates[dates.length-1]];
-
-        let amt_shares = this.props.amt/first_price;
-        let total_money = Math.floor(amt_shares * cur_price); 
-        let total_money_formatted = accounting.formatMoney(total_money)
+        let from_date = this.state.from_date;
+        let to_date = this.state.to_date;
+        if(from_date && to_date){
+            let from_index = this.findDateIndex(from_date);
+            let to_index = this.findDateIndex(to_date);
         
+            let from_date_str = dates[from_index];
+            let to_date_str = dates[to_index];
+            let from_price = stock_data[dates[from_index]];
+            let to_price = stock_data[dates[to_index]];
+
+            let amt_shares = this.props.amt/from_price;
+            let total_money = Math.floor(amt_shares * to_price); 
+            let total_money_formatted = accounting.formatMoney(total_money)
+            return(
+                <div>
+                    <h1>If you invested {this.props.amt} in {this.props.ticker} at {from_date_str}  and sold at {to_date_str}you would have:</h1>
+                    <h1>{total_money_formatted}</h1>
+                </div>
+            )
+        }
         return( 
-            <div>
-                <h1>If you invested {this.props.amt} in {this.props.ticker} at {first_date} you would have:</h1>
-                <h1>{total_money_formatted}</h1>
-            </div>
+            <h1>poop poop</h1>
         )
     }
     render(){        
         return(
             <React.Fragment>                
-                <TimeBar
-                    important_dates={this.state.important_dates}
-                    sendFrom = {this.getFrom}
-                    sendTo = {this.getTo}
-                />                
-                <div className={Object.keys(this.props.stock_data).length>0?"":"hidden"}>                
-                    <this.findTotal/>            
+                <div
+                    className={Object.keys(this.props.stock_data).length>0?"":"hidden"}
+                >
+                    <TimeBar
+                        important_dates={this.state.important_dates}
+                        sendFrom = {this.getFrom}
+                        sendTo = {this.getTo}
+                        first_date = {this.state.important_dates["IPO"]}
+                        last_date = {this.state.important_dates["CURRENT"]}
+                    />                
+                    <div id="results-div">
+                        <div id="from-results-div">
+                            <this.findDate
+                                date ={this.state.from_date}
+                            />
+                        </div>
+                        <div id="to-results-div">
+                            <this.findDate
+                                date={this.state.to_date}
+                            />
+                        </div>
+                    </div>
+                    <this.findTotal/>
                 </div>
-
-                <div className={Object.keys(this.props.stock_data).length>0?"hidden":""}>
+                <div
+                    className={Object.keys(this.props.stock_data).length>0?"hidden":""}
+                >
                     <img 
                         src={loading}
                         alt="loading"
