@@ -1,0 +1,15 @@
+#time-bar-div{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:center
+}
+
+#from-bar-div{
+    width:50%;
+    flex-direction:row;
+}
+#to-bar-div{
+    width:50%;
+    flex-direction:row;
+}

@@ -9,16 +9,49 @@ class Results extends Component{
         super(props);
         this.state = {
             total_amount:-1,
-            first_date: null,
-            last_date: null,
-            from_date:new Date(),
-            to_date:new Date()            
+            important_dates:{},
+            from_date:null,
+            to_date:null            
         }
     }
     componentDidUpdate=()=>{
-        if(this.state.first_date==null){
-            this.stock_range();
+        if(Object.keys(this.state.important_dates).length<=0 && Object.keys(this.props.stock_data).length>=1){        
+            this.findImportantDates();
         }
+    }
+    findImportantDates=(from_date_param)=>{
+        let important_dates= {};
+        let stock_data = this.props.stock_data;
+        let dates = Object.keys(stock_data);
+        console.log(`There is no god ${this.state.from_date}`);
+        important_dates["IPO"] = this.convert_string_to_date(dates[dates.length-1]);
+        important_dates["CURRENT"] = this.convert_string_to_date(dates[0]);
+        
+        important_dates["HIGHEST"] = this.convert_string_to_date(this.getExtremes(1));
+        important_dates["LOWEST"] = this.convert_string_to_date(this.getExtremes(0));
+        
+        let from_date = from_date_param?from_date_param:this.state.from_date;
+        important_dates["NEXT_HIGHEST"] = this.convert_string_to_date(this.getExtremes(1, from_date));   
+        important_dates["NEXT_LOWEST"] = this.convert_string_to_date(this.getExtremes(0, from_date));
+
+        console.log(important_dates);
+        this.setState({
+            important_dates:important_dates
+        })
+    }
+    getExtremes = (type,after_date) =>{
+        let stock_data = this.props.stock_data;
+        let dates = Object.keys(stock_data);
+        if(after_date){
+            let after_index = this.findDateIndex(after_date);
+            console.log(after_index);
+            dates = dates.slice(0, after_index);
+        }
+        let extreme_stock_price = type>0?Math.max.apply(null, dates.map(function(x){return stock_data[x]})):
+                                         Math.min.apply(null, dates.map(function(x){return stock_data[x]}));
+
+        let extreme_match = dates.filter(function(y){return stock_data[y] === extreme_stock_price});    
+        return extreme_match[0];
     }
     findTotal =()=>{
         let stock_data = this.props.stock_data;
@@ -40,89 +73,16 @@ class Results extends Component{
             </div>
         )
     }
-    findHighest =() =>{        
-        let stock_data = this.props.stock_data;
-        let dates = Object.keys(stock_data);
-
-        var highest = Math.max.apply(null, dates.map(function(x){return stock_data[x]}));
-        var highest_match = dates.filter(function(y){return stock_data[y] === highest});    
-        let highest_match_index = -1;
-
-        for(let i = 0; i<dates.length-1; i++){
-            if(dates[i] == highest_match){
-                highest_match_index = i;
-                break;
-            }
-        }
-
-        if(highest_match_index == 0){
-            return(
-                <h1>With a price of {highest}, today is the highest the stock price has ever been!</h1>
-            )
-        } 
-
-        let post_high_dates = dates.slice(0, highest_match_index);
-        var lowest = Math.min.apply(null, post_high_dates.map(function(x){return stock_data[x]}));
-        var lowest_match = dates.filter(function(y){return stock_data[y] === lowest});    
-
-        let amt_shares = this.props.amt/highest;
-        let total_money = Math.floor(amt_shares * lowest); 
-        let total_money_formatted = accounting.formatMoney(total_money)
-
-        return (
-            <div>
-                <h1>If you bought at the highest price of {highest} at {highest_match}</h1>
-                <h1>and then sold at the lowest price after of {lowest} at {lowest_match} you would have</h1>
-                <h1>{total_money_formatted}</h1>
-            </div>
-        )
-    }
-    findLowest = () =>{
-        let stock_data = this.props.stock_data;
-        let dates = Object.keys(stock_data);
-
-        var lowest = Math.min.apply(null, dates.map(function(x){return stock_data[x]}));
-        var lowest_match = dates.filter(function(y){return stock_data[y] === lowest});    
-        let lowest_match_index = -1;
-
-
-        if(lowest_match_index == 0){
-            return(
-                <h1>With a price of {lowest}, today is the lowest the stock price has ever been!</h1>
-            )
-        }
-
-        let post_low_dates = dates.slice(0, lowest_match_index);
-
-        var highest = Math.max.apply(null, post_low_dates.map(function(x){return stock_data[x]}));
-        var highest_match = dates.filter(function(y){return stock_data[y] === highest});    
-
-        let amt_shares = this.props.amt/lowest;
-        let total_money = Math.floor(amt_shares * highest); 
-        let total_money_formatted = accounting.formatMoney(total_money)
-
-        return (
-            <div>
-                <h1>If you bought at the lowest price of {lowest} at {lowest_match}</h1>
-                <h1>and then sold at the highest price after of {highest} at {highest_match} you would have</h1>
-                <h1>{total_money_formatted}</h1>
-            </div>
-        )
-
-    }
     render(){        
         return(
             <React.Fragment>                
                 <TimeBar
-                    first_date={this.state.first_date}
-                    last_date={this.state.last_date}
+                    important_dates={this.state.important_dates}
                     sendFrom = {this.getFrom}
                     sendTo = {this.getTo}
                 />                
                 <div className={Object.keys(this.props.stock_data).length>0?"":"hidden"}>                
                     <this.findTotal/>            
-                    <this.findHighest/>
-                    <this.findLowest/>            
                 </div>
 
                 <div className={Object.keys(this.props.stock_data).length>0?"hidden":""}>
@@ -137,22 +97,9 @@ class Results extends Component{
             </React.Fragment>
         )
     }
-    stock_range=()=>{
-        let stock_data = this.props.stock_data;
-        let dates = Object.keys(stock_data);
-        if(dates.length>0){
-            let first_date = this.convert_string_to_date(dates[dates.length-1]);
-            let last_date = this.convert_string_to_date(dates[0]);
-            this.setState({
-                first_date:first_date,
-                last_date:last_date
-            })
-            return;
-        }
-    } 
+
     convert_string_to_date=(date)=>{
         let date_array = date.split("-");
-        console.log(date_array)
         let month = Number(date_array[1])-1
         return(new Date(date_array[0], month, date_array[2]));
     }
@@ -172,22 +119,22 @@ class Results extends Component{
         this.setState({
             from_date:from_date
         })
+        this.findImportantDates(from_date);
+        let index = this.findDateIndex(from_date);
     }
     getTo=(to_date)=>{
         this.setState({
             to_date:to_date
         })
-        let to_string = this.convert_date_to_string(to_date);
-        console.log(to_string);
-        let index = this.findDateIndex(to_string);
-        console.log(index);
+        let index = this.findDateIndex(to_date);
     }
     findDateIndex=(date)=>{
+        let date_string = this.convert_date_to_string(date);
         let stock_data = this.props.stock_data;
         let dates = Object.keys(stock_data);
-        let match_index
-        for(let i = 0; i<dates.length-1; i++){
-            if(dates[i] == date){
+        let match_index = -1;
+        for(let i = 0; i<dates.length; i++){
+            if(dates[i] == date_string){
                 match_index = i;
                 break;
             }
