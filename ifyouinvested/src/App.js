@@ -38,6 +38,7 @@ class App extends Component {
     })
 
     if(av_response){
+      console.log(av_response);
       let av_data = av_response.data["Time Series (Daily)"];
       let av_keys = Object.keys(av_data);
       console.log(av_keys[av_keys.length-1]);
@@ -83,7 +84,7 @@ class App extends Component {
           </div>
 
           <div
-            className= {!this.state.show_input && this.state.stock_data? "":"hidden"}>       
+            className= {!this.state.show_input && this.state.stock_data? "results-div":"hidden"}>       
             <Results
               ticker={this.state.ticker}
               amt={this.state.amt}

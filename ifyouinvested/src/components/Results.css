@@ -4,7 +4,7 @@
 .date_boxes{
     display:inline-block;
 }
-#results-div{
+#dates-div{
     display:flex;
     flex-direction:row;
     align-items:center;
@@ -13,11 +13,18 @@
 
 #from-results-div{
     margin-right:20px;
-    width:50%;
+    width:40%;
     flex-direction:row;
 }
 #to-results-div{
     margin-left:20px;
-    width:50%;
+    width:40%;
     flex-direction:row;
+}
+#total-results{
+    margin:0 auto;
+    width:80%;
+}
+.results-div{
+    width:100%;
 }

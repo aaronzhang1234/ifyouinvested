@@ -59,12 +59,13 @@ class Results extends Component{
             let date_info = dates[index];
            
             let price = stock_data[date_info];
-
+            let rounded_price = Math.floor(price*100)/100;
+            let price_formatted = accounting.formatMoney(rounded_price);
             return(
                 <div>
                     <h1>On {date_info}</h1>
                     <h1>the price was</h1>
-                    <h1>{price}</h1>                
+                    <h1>{price_formatted}</h1>                
                 </div>
             )
         }
@@ -88,18 +89,16 @@ class Results extends Component{
             let from_index = this.findDateIndex(from_date);
             let to_index = this.findDateIndex(to_date);
         
-            let from_date_str = dates[from_index];
-            let to_date_str = dates[to_index];
             let from_price = stock_data[dates[from_index]];
             let to_price = stock_data[dates[to_index]];
 
-            let amt_shares = this.props.amt/from_price;
-            let total_money = Math.floor(amt_shares * to_price); 
-            let total_money_formatted = accounting.formatMoney(total_money)
+            let amt_shares = Math.floor(this.props.amt/from_price*1000)/1000;
+            let total_money = Math.floor((amt_shares * to_price)*100)/100; 
+            let total_money_formatted = accounting.formatMoney(total_money);
             return(
-                <div>
-                    <h1>If you invested {this.props.amt} in {this.props.ticker} at {from_date_str}  and sold at {to_date_str}you would have:</h1>
-                    <h1>{total_money_formatted}</h1>
+                <div id="total-results">
+                    <h1> you would have: </h1>
+                <h1>{amt_shares} shares worth {total_money_formatted}</h1>
                 </div>
             )
         }
@@ -113,6 +112,7 @@ class Results extends Component{
                 <div
                     className={Object.keys(this.props.stock_data).length>0?"":"hidden"}
                 >
+                    <h1>If you invested {this.props.amt} in {this.props.ticker}</h1>
                     <TimeBar
                         important_dates={this.state.important_dates}
                         sendFrom = {this.getFrom}
@@ -120,7 +120,7 @@ class Results extends Component{
                         first_date = {this.state.important_dates["IPO"]}
                         last_date = {this.state.important_dates["CURRENT"]}
                     />                
-                    <div id="results-div">
+                    <div id="dates-div">
                         <div id="from-results-div">
                             <this.findDate
                                 date ={this.state.from_date}

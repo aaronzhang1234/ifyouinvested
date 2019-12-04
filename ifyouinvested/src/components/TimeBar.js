@@ -30,7 +30,7 @@ class TimeBar extends Component{
         return(
             <div id="time-bar-div">
                 <div id="from-bar-div">
-                    <h1>From</h1>
+                    <h1>At</h1>
                     <DropDown
                         options={from_options}                        
                         placeholder="Select a date to begin"
@@ -45,7 +45,7 @@ class TimeBar extends Component{
                     />
                 </div>
                 <div id="to-bar-div">
-                    <h1>To</h1>
+                    <h1>and sold at</h1>
                     <DropDown
                         options={to_options}
                         placeholder="Select an ending date"
