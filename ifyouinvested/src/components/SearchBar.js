@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import axios from 'axios'
 import AsyncSelect from 'react-select/async'
-import './SearchBar.css'
+import '../css/SearchBar.css'
 let searchTimer;
 class SearchBar extends Component{
     constructor(props){

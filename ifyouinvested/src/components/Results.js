@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import accounting from 'accounting';
-import './Results.css';
+import '../css/Results.css';
 import TimeBar from './TimeBar.js';
 import loading from '../puff.svg'
 
@@ -75,7 +75,7 @@ class Results extends Component{
                     src={loading}
                     alt="loading"
                 />
-                <h1>Please Wait</h1>
+                <h1>Choose a date</h1>
             </React.Fragment>
         )
     }
@@ -97,13 +97,13 @@ class Results extends Component{
             let total_money_formatted = accounting.formatMoney(total_money);
             return(
                 <div id="total-results">
-                    <h1> you would have: </h1>
-                <h1>{amt_shares} shares worth {total_money_formatted}</h1>
+                    <h1> You would have: </h1>
+                    <h1>{amt_shares} share(s) worth {total_money_formatted}</h1>
                 </div>
             )
         }
         return( 
-            <h1>poop poop</h1>
+            <h1>Pick two valid dates</h1>
         )
     }
     render(){        

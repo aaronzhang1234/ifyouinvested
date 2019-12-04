@@ -3,7 +3,7 @@ import Results from './components/Results.js'
 import SearchBar from './components/SearchBar.js'
 import MoneyBar from './components/MoneyBar.js'
 import axios from 'axios';
-import './App.css';
+import './css/App.css';
 
 class App extends Component {
   constructor(props){

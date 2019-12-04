@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import './MoneyBar.css'
+import '../css/MoneyBar.css'
 class MoneyBar extends Component{
     constructor(props){
         super(props);
