@@ -3,13 +3,11 @@ import accounting from 'accounting';
 import './Results.css';
 import TimeBar from './TimeBar.js';
 import loading from '../puff.svg'
-import { isThisHour } from 'date-fns';
 
 class Results extends Component{
     constructor(props){
         super(props);
         this.state = {
-            total_amount:-1,
             important_dates:{},
             from_date:null,
             to_date:null            
@@ -71,10 +69,13 @@ class Results extends Component{
             )
         }
         return(
-            <img 
-                src={loading}
-                alt="loading"
-            />
+            <React.Fragment>
+                <img 
+                    src={loading}
+                    alt="loading"
+                />
+                <h1>Please Wait</h1>
+            </React.Fragment>
         )
     }
     findTotal =()=>{
@@ -170,13 +171,11 @@ class Results extends Component{
             from_date:from_date
         })
         this.findImportantDates(from_date);
-        let index = this.findDateIndex(from_date);
     }
     getTo=(to_date)=>{
         this.setState({
             to_date:to_date
         })
-        let index = this.findDateIndex(to_date);
     }
     findDateIndex=(date)=>{
         let date_string = this.convert_date_to_string(date);

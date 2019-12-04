@@ -64,17 +64,31 @@ class TimeBar extends Component{
     }
     handleFromChange=(date)=>{
         let from_value = date["value"]?date["value"]: date;
+        let to_value = this.state.to_date;
         this.props.sendFrom(from_value);
+        if(from_value > to_value){
+            this.setState({
+                to_date:null
+            })
+            this.props.sendTo(null);
+        }
         this.setState({
             from_date:from_value
         })
     }
     handleToChange=(date)=>{
         let to_value = date["value"]?date["value"]: date;
-        this.props.sendTo(to_value);
+        let from_value = this.state.from_date;
+        if(from_value > to_value){
+            this.setState({
+                from_date:null
+            })
+            this.props.sendFrom(null);
+        }
         this.setState({
             to_date:to_value
         })
+        this.props.sendTo(to_value);
     }
 }
 export default TimeBar

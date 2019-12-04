@@ -31,7 +31,7 @@ class SearchBar extends Component{
     render(){
         return(
             <div>
-                <AsyncSelect 
+                <AsyncSelect                     
                     cacheOptions 
                     defaultOptions
                     onChange ={this.getResults}
