@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import accounting from 'accounting';
 import '../css/Results.css';
 import TimeBar from './TimeBar.js';
+import MoneyBar from './MoneyBar';
 import loading from '../puff.svg'
 
 class Results extends Component{
@@ -62,10 +63,10 @@ class Results extends Component{
             let rounded_price = Math.floor(price*100)/100;
             let price_formatted = accounting.formatMoney(rounded_price);
             return(
-                <div>
-                    <h1>On {date_info}</h1>
-                    <h1>the price was</h1>
-                    <h1>{price_formatted}</h1>                
+                <div class="date-results-div">
+                    <h2>On {date_info}</h2>
+                    <h2>the price was</h2>
+                    <h2>{price_formatted}</h2>                
                 </div>
             )
         }
@@ -91,14 +92,25 @@ class Results extends Component{
         
             let from_price = stock_data[dates[from_index]];
             let to_price = stock_data[dates[to_index]];
-
+            let percentage_change = 0;
+            let gain_loss = "Equal";
+            if(from_price> to_price){
+                gain_loss = "loss";
+                percentage_change = Math.round(((to_price - from_price)/from_price)*100);
+            }else{
+                gain_loss = "gain";
+                percentage_change = Math.round(((from_price - to_price)/from_price)*100)*-1;
+            }
+            let percentage_string = percentage_change.toLocaleString();
             let amt_shares = Math.floor(this.props.amt/from_price*1000)/1000;
+            let amt_string = amt_shares.toLocaleString();
             let total_money = Math.floor((amt_shares * to_price)*100)/100; 
             let total_money_formatted = accounting.formatMoney(total_money);
             return(
                 <div id="total-results">
                     <h1> You would have: </h1>
-                    <h1>{amt_shares} share(s) worth {total_money_formatted}</h1>
+                    <h1>{amt_string} share(s) worth {total_money_formatted}</h1>
+                    <h1>A percentage {gain_loss} of {percentage_string}%</h1>
                 </div>
             )
         }
@@ -112,7 +124,7 @@ class Results extends Component{
                 <div
                     className={Object.keys(this.props.stock_data).length>0?"":"hidden"}
                 >
-                    <h1>If you invested {this.props.amt} in {this.props.ticker}</h1>
+                    <h1>If you invested {this.props.amt}  in {this.props.ticker}</h1>
                     <TimeBar
                         important_dates={this.state.important_dates}
                         sendFrom = {this.getFrom}
