@@ -10,7 +10,7 @@ class App extends Component {
     super(props);
     this.state = {
       show_input:true,
-      ticker:"",
+      ticker:null,
       amt:1000,
       stock_data:{},
       av_error:false,
@@ -30,42 +30,49 @@ class App extends Component {
     let av_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol="+this.state.ticker+"&outputsize=full&apikey="+av_key;
     let quandl_url = "https://www.quandl.com/api/v3/datasets/WIKI/"+this.state.ticker+"/data.json?api_key="+quandl_key;
 
-    let av_response = await axios.get(av_url).catch((err)=>{
-      console.log(err);
-      this.setState({
-        av_error:true
+    try{
+      let av_response = await axios.get(av_url).catch((err)=>{
+        console.log(err);
+        this.setState({
+          av_error:true
+        });
+      })
+      if(av_response){      
+        let av_data = av_response.data["Time Series (Daily)"];
+        let av_keys = Object.keys(av_data);
+        console.log(av_keys[av_keys.length-1]);
+        for(let i = 0; i< av_keys.length; i++){
+          let day_data = av_data[av_keys[i]]; 
+          stock_data[av_keys[i]] = Number(day_data["5. adjusted close"]);
+        }
+      }  
+
+      let quandl_response = await axios.get(quandl_url).catch((err)=>{
+        console.log(err);
+        this.setState({
+          quandl_error:true
+        });
       });
-    })
 
-    if(av_response){
-      console.log(av_response);
-      let av_data = av_response.data["Time Series (Daily)"];
-      let av_keys = Object.keys(av_data);
-      console.log(av_keys[av_keys.length-1]);
-      for(let i = 0; i< av_keys.length; i++){
-        let day_data = av_data[av_keys[i]]; 
-        stock_data[av_keys[i]] = Number(day_data["5. adjusted close"]);
+      if(quandl_response){
+        let quandl_data = quandl_response.data["dataset_data"]["data"];
+        for(let p = 0; p<quandl_data.length-1; p++){
+          let quandl_info = quandl_data[p];
+          stock_data[quandl_info[0]] = quandl_info[11]; 
+        }
       }
-    }
 
-    let quandl_response = await axios.get(quandl_url).catch((err)=>{
-      console.log(err);
       this.setState({
+        stock_data:stock_data
+      })
+    }
+    catch(err){
+      console.error(err);
+      this.setState({
+        av_error:true,
         quandl_error:true
       });
-    });
-
-    if(quandl_response){
-      let quandl_data = quandl_response.data["dataset_data"]["data"];
-      for(let p = 0; p<quandl_data.length-1; p++){
-        let quandl_info = quandl_data[p];
-        stock_data[quandl_info[0]] = quandl_info[11]; 
-      }
     }
-
-    this.setState({
-      stock_data:stock_data
-    })
   } 
   render(){
     return(
@@ -78,7 +85,13 @@ class App extends Component {
             <h1> INVESTMENT IN </h1>
               <SearchBar sendTicker={this.getTicker}/>            
             <h1> WORTH NOW? </h1>
-            <button onClick={this.getStock}>
+            <div
+              className ={this.state.amt==null || this.state.ticker==null ? "" : "hidden"}>
+               <h1>Please pick a valid amount and stock</h1>
+            </div>
+            <button 
+              className ={this.state.amt==null || this.state.ticker==null ? "hidden" : ""}
+              onClick={this.getStock}>
               Press Button for Stock
             </button>
           </div>

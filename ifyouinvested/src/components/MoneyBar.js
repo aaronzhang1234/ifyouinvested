@@ -26,11 +26,15 @@ class MoneyBar extends Component{
     updateAmt = (evt) =>{
         let amount = evt.target.value;
 
+        if(!isNaN(amount) && Number(amount) > 0){
+            this.props.sendAmt(amount);
+        }else{
+            this.props.sendAmt(null);
+        }
         this.setState({
             money_length:amount.length,
             amt:amount
         });
-        this.props.sendAmt(amount);
     }
 }
 export default MoneyBar
