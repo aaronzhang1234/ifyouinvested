@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import accounting from 'accounting';
 import '../css/Results.css';
 import TimeBar from './TimeBar.js';
+import moment from 'moment';
 import loading from '../imgs/puff.svg';
 import face_screaming from '../imgs/face_screaming.png';
 import loudly_crying from '../imgs/loudly_crying.png';
@@ -64,14 +65,17 @@ class Results extends Component{
             let stock_data = this.props.stock_data;
             let dates = Object.keys(stock_data);
 
-            let date_info = dates[index];
-           
+            let date_info = dates[index];           
             let price = stock_data[date_info];
             let rounded_price = Math.floor(price*100)/100;
             let price_formatted = accounting.formatMoney(rounded_price);
+
+            console.log(date);
+            let human_readable_date = moment(date["date"]).format("MMMM Do YYYY");
+
             return(
                 <div className="date-results-div">
-                    <h2>On {date_info}</h2>
+                    <h2>On {human_readable_date}</h2>
                     <h2>the price was</h2>
                     <h2>{price_formatted}</h2>                
                 </div>
@@ -105,8 +109,8 @@ class Results extends Component{
                 gain_loss = "loss";
                 percentage_change = Math.round(((to_price - from_price)/from_price)*100);
                 console.log(percentage_change);
-                if (percentage_change<=-100){reaction_image = face_screaming};
-                if (percentage_change>-100){reaction_image = loudly_crying};
+                if (percentage_change<=-70){reaction_image = face_screaming};
+                if (percentage_change>-70){reaction_image = loudly_crying};
                 if (percentage_change>-50){reaction_image = fear_full};
                 if (percentage_change>-20){reaction_image = pensive_face};
                 if (percentage_change>-1){reaction_image = sleeping_face};

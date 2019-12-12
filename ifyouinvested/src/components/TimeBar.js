@@ -21,20 +21,20 @@ class TimeBar extends Component{
     };
     render(){
         const from_options =[
-            {value:this.props.important_dates["IPO"] ,label:"IPO"},
-            {value:this.props.important_dates["HIGHEST"] ,label:"Absolute Highest"},
-            {value:this.props.important_dates["LOWEST"] ,label:"Absolute Lowest"}
+            {value:this.props.important_dates["IPO"] ,label:"The IPO"},
+            {value:this.props.important_dates["HIGHEST"] ,label:"The Absolute Highest"},
+            {value:this.props.important_dates["LOWEST"] ,label:"The Absolute Lowest"}
         ]
         const to_options=[
-            {value:this.props.important_dates["CURRENT"] ,label:"Current"},
-            {value:this.props.important_dates["NEXT_HIGHEST"] ,label:"Next Highest"},
-            {value:this.props.important_dates["NEXT_LOWEST"] ,label:"Next Lowest"}
+            {value:this.props.important_dates["CURRENT"] ,label:"The Current Price"},
+            {value:this.props.important_dates["NEXT_HIGHEST"] ,label:"The Next Highest"},
+            {value:this.props.important_dates["NEXT_LOWEST"] ,label:"The Next Lowest"}
         ]
         
         return(
             <div id="time-bar-div">
                 <div id="from-bar-div">
-                    <h1>At</h1>
+                    <h1>At </h1>
                     <DropDown
                         options={from_options}                                                
                         value = {this.state.from_label}
@@ -51,7 +51,7 @@ class TimeBar extends Component{
                     />
                 </div>
                 <div id="to-bar-div">
-                    <h1>and sold at</h1>
+                    <h1>and sold at </h1>
                     <DropDown
                         value={this.state.to_label}
                         options={to_options}
