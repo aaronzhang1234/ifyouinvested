@@ -2,8 +2,15 @@ import React,{Component} from 'react';
 import accounting from 'accounting';
 import '../css/Results.css';
 import TimeBar from './TimeBar.js';
-import MoneyBar from './MoneyBar';
-import loading from '../imgs/puff.svg'
+import loading from '../imgs/puff.svg';
+import face_screaming from '../imgs/face_screaming.png';
+import loudly_crying from '../imgs/loudly_crying.png';
+import fear_full from '../imgs/fear_full.png';
+import pensive_face from '../imgs/pensive_face.png';
+import sleeping_face from '../imgs/sleeping_face.png';
+import relieved_face from '../imgs/relieved_face.png';
+import open_mouth from '../imgs/open_mouth.png';
+import heart_eyes from '../imgs/heart_eyes.png';
 
 class Results extends Component{
     constructor(props){
@@ -63,7 +70,7 @@ class Results extends Component{
             let rounded_price = Math.floor(price*100)/100;
             let price_formatted = accounting.formatMoney(rounded_price);
             return(
-                <div class="date-results-div">
+                <div className="date-results-div">
                     <h2>On {date_info}</h2>
                     <h2>the price was</h2>
                     <h2>{price_formatted}</h2>                
@@ -93,12 +100,23 @@ class Results extends Component{
             let to_price = stock_data[dates[to_index]];
             let percentage_change = 0;
             let gain_loss = "Equal";
+            let reaction_image = null;
             if(from_price> to_price){
                 gain_loss = "loss";
                 percentage_change = Math.round(((to_price - from_price)/from_price)*100);
+                console.log(percentage_change);
+                if (percentage_change<=-100){reaction_image = face_screaming};
+                if (percentage_change>-100){reaction_image = loudly_crying};
+                if (percentage_change>-50){reaction_image = fear_full};
+                if (percentage_change>-20){reaction_image = pensive_face};
+                if (percentage_change>-1){reaction_image = sleeping_face};
             }else{
                 gain_loss = "gain";
                 percentage_change = Math.round(((from_price - to_price)/from_price)*100)*-1;
+                if (percentage_change>=100){reaction_image = heart_eyes};
+                if (percentage_change<100){reaction_image = open_mouth};
+                if (percentage_change<20){reaction_image = relieved_face};
+                if (percentage_change<1){reaction_image = sleeping_face};
             }
             let percentage_string = percentage_change.toLocaleString();
             let amt_shares = Math.floor(this.props.amt/from_price*1000)/1000;
@@ -109,7 +127,11 @@ class Results extends Component{
                 <div id="total-results">
                     <h1> You would have: </h1>
                     <h1>{amt_string} share(s) worth {total_money_formatted}</h1>
-                    <h1>A percentage {gain_loss} of {percentage_string}%</h1>
+
+                    <h1>
+                        <img className = "reaction-images" src={reaction_image}/> 
+                        A percentage {gain_loss} of {percentage_string}%
+                        <img className = "reaction-images" src={reaction_image}/></h1>
                 </div>
             )
         }

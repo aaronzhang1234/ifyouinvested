@@ -4,6 +4,9 @@
 .date_boxes{
     display:inline-block;
 }
+.reaction-images{
+    width:5%;
+}
 #dates-div{
     margin-top:20px;
     display:flex;
