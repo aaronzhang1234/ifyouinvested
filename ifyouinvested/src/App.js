@@ -115,7 +115,6 @@ class App extends Component {
     })
   }
   getTicker=(ticker)=>{
-    console.log(ticker);
     this.setState({
       ticker:ticker
     })

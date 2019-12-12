@@ -3,7 +3,7 @@ import accounting from 'accounting';
 import '../css/Results.css';
 import TimeBar from './TimeBar.js';
 import MoneyBar from './MoneyBar';
-import loading from '../puff.svg'
+import loading from '../imgs/puff.svg'
 
 class Results extends Component{
     constructor(props){
@@ -76,7 +76,6 @@ class Results extends Component{
                     src={loading}
                     alt="loading"
                 />
-                <h1>Choose a date</h1>
             </React.Fragment>
         )
     }
