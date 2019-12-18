@@ -172,7 +172,7 @@ class Results extends Component{
                     <this.findTotal/>
                 </div>
                 <div
-                    className={Object.keys(this.props.stock_data).length>0?"hidden":""}
+                    className={Object.keys(this.props.stock_data).length>0 || this.props.av_error?"hidden":""}
                 >
                     <img 
                         src={loading}

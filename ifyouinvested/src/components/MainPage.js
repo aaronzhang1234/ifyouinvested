@@ -3,16 +3,16 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from 'react-router-dom';
 import axios from 'axios';
-import Results from './components/Results.js'
-import SearchBar from './components/SearchBar.js'
-import MoneyBar from './components/MoneyBar.js'
-import MainPage from './components/MainPage.js'
-import './css/App.css';
+import Results from './Results.js'
+import SearchBar from './SearchBar.js'
+import MoneyBar from './MoneyBar.js'
+import '../css/App.css';
 
-class App extends Component {
+class MainPage extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -21,7 +21,8 @@ class App extends Component {
       amt:1000,
       stock_data:{},
       av_error:false,
-      quandl_error:false
+      quandl_error:false,
+      redirect:false
     }
     this.getStock = this.getStock.bind(this);
   }
@@ -82,26 +83,62 @@ class App extends Component {
     }
   } 
   render(){
+    if(this.state.redirect == true){
+        return <Redirect to={{pathname:'/results'}}/>
+    }
     return(
-         <Router>
-          <Switch>
-            <Route path="/hello">
-              <MoneyBar/>
-            </Route>
-            <Route path="/results">
-              <Results/>
-            </Route>
-            <Route path="/">
-              <MainPage/>
-            </Route>
-          </Switch>
-        </Router>
+      <div className="App">
+        <header className="App-header">
+            <form onSubmit={this.handleSubmit}>
+          <div 
+           className ={this.state.show_input ? "input_div" : "hidden"}>
+            <h1>HOW MUCH IS A</h1>
+              <MoneyBar sendAmt={this.getAmt}/>
+            <h1> INVESTMENT IN </h1>
+              <SearchBar sendTicker={this.getTicker}/>            
+            <h1> WORTH NOW? </h1>
+            <div
+              className ={this.state.amt==null || this.state.ticker==null ? "" : "hidden"}>
+               <h1>Please pick a valid amount and stock</h1>
+            </div>
+            <input type="submit" value="submit"/>
+            
+            {
+            <button 
+              className ={this.state.amt==null || this.state.ticker==null ? "hidden" : ""}
+              onClick={this.getStock}>
+              Press Button for Stock
+            </button>
+            } 
+          </div>
+            </form>
+            {/*
+          <div
+            className= {!this.state.show_input && this.state.stock_data? "results-div":"hidden"}>       
+            <Results
+              ticker={this.state.ticker}
+              amt={this.state.amt}
+              stock_data={this.state.stock_data}
+              av_error={this.state.av_error}
+              quandl_error={this.state.quandl_error}/>
+          </div>
+          */
+            }
+        </header>
+      </div>
     );
-  };
+  }
   getAmt=(amt)=>{
     this.setState({
       amt:amt
     })
+  }
+  handleSubmit = (event) =>{
+      event.preventDefault();
+      this.setState({
+          redirect:true
+      })
+      console.log("submitted");      
   }
   getTicker=(ticker)=>{
     this.setState({
@@ -110,4 +147,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default MainPage;
